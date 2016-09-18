@@ -105,7 +105,8 @@ public abstract class SmoothViewGroup extends ViewGroup {
                 }
             }
         });
-
+        animator.start();
+        mStatus = STATUS_SMOOTHING;
     }
 
 
@@ -119,6 +120,14 @@ public abstract class SmoothViewGroup extends ViewGroup {
      */
     protected abstract void doAnim();
 
+    /**
+     * 是否是技术圈
+     * @return
+     */
+    protected boolean isOddCircle()
+    {
+        return mRepeatTimes % 2 == 1;
+    }
 
 
 }
