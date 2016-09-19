@@ -67,7 +67,7 @@ public abstract class SmoothViewGroup extends ViewGroup {
 
     protected abstract void initview();
 
-
+  ;
     public void startSmooth()
     {
         if (mStatus != STATUS_STOP)
@@ -75,36 +75,38 @@ public abstract class SmoothViewGroup extends ViewGroup {
             return;
         }
 
-        ValueAnimator animator = ValueAnimator.ofFloat(-mHeight,0);
-        animator.setDuration(mDuration);
-        animator.setInterpolator(new AccelerateDecelerateInterpolator());
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                float marginTop = (float) valueAnimator.getAnimatedValue();
-                mSmoothMarginTop = (int) marginTop;
-                if (marginTop == 0) {
 
-                    postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
+            ValueAnimator animator = ValueAnimator.ofFloat(-mHeight,0);
+            animator.setDuration(mDuration);
+            animator.setInterpolator(new AccelerateDecelerateInterpolator());
+            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                    float marginTop = (float) valueAnimator.getAnimatedValue();
+                    mSmoothMarginTop = (int) marginTop;
+                    if (marginTop == 0) {
 
-                            mRepeatTimes++;
+                        postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
 
-                            mSmoothMarginTop = -mHeight;
+                                mRepeatTimes++;
 
-                            doAnimFinish();
+                                mSmoothMarginTop = -mHeight;
 
-                            mStatus = STATUS_STOP;
+                                doAnimFinish();
 
-                        }
-                    }, 50);
+                                mStatus = STATUS_STOP;
 
-                } else {
-                    doAnim();
+                            }
+                        }, 50);
+
+                    } else {
+                        doAnim();
+                    }
                 }
-            }
-        });
+            });
+
         animator.start();
         mStatus = STATUS_SMOOTHING;
     }

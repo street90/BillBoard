@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="BillTextView">
+        <attr name="billTextSize" format="integer"/>
+        <attr name="billTextGravity">
+            <enum name="top" value="0x30"/>
+            <enum name="bottom" value="0x50"/>
+            <enum name="left" value="0x03"/>
+            <enum name="right" value="0x05"/>
+        </attr>
+        <attr name="billTextColor" format="color"/>
+        <attr name="billTextBackground" format="color|reference"/>
+    </declare-styleable>
+</resources>

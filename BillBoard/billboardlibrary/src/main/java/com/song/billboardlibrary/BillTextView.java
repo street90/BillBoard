@@ -1,8 +1,15 @@
 package com.song.billboardlibrary;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 
@@ -12,12 +19,17 @@ import java.util.List;
 /**
  * Created by song on 2016/9/17.
  */
-public class BillTextView extends SmoothViewGroup {
+public class BillTextView extends SmoothViewGroup implements View.OnClickListener{
 
     private List<String> mTextList = new ArrayList<>();
     private TextView[] mTexts = new TextView[2];
+    private BillViewClickListener mClickListener;
+    private int status = STATUS_STOP;//开启无限循环
 
-    private int mTextLineHeight = 0;
+    int billTextViewGravity = Gravity.CENTER;
+    int billTextViewSize = 18;
+    int billTextViewColor =  Color.BLACK;
+    Drawable billTextViewBg = null;
 
 
     public BillTextView(Context context) {
@@ -32,9 +44,21 @@ public class BillTextView extends SmoothViewGroup {
         super(context, attrs, defStyleAttr);
     }
 
+    private void init(Context context, AttributeSet attrs)
+    {
+        TypedArray a = context.obtainStyledAttributes(attrs,R.styleable.BillTextView,0,0);
+        billTextViewBg = a.getDrawable(R.styleable.BillTextView_billTextBackground);
+        billTextViewColor = a.getColor(R.styleable.BillTextView_billTextColor,Color.BLACK);
+        billTextViewGravity = a.getInt(R.styleable.BillTextView_billTextGravity,Gravity.CENTER);
+        billTextViewSize = a.getInt(R.styleable.BillTextView_billTextSize,18);
+        a.recycle();
+
+    }
+
 
     @Override
     protected void initview() {
+
 
         if (mTextList.size() == 0)
             return;
@@ -46,16 +70,18 @@ public class BillTextView extends SmoothViewGroup {
         for (int i = 0; i < mTexts.length; i++) {
             mTexts[i] = new TextView(getContext());
             mTexts[i].setText(getBillText(i));
+            mTexts[i].setTag(i);
             mTexts[i].setLines(2);
             mTexts[i].setEllipsize(TextUtils.TruncateAt.END);
             mTexts[i].setTextSize(14);
+            mTexts[i].setGravity(billTextViewGravity);
+            mTexts[i].setTextColor(billTextViewColor);
+            mTexts[i].setBackground(billTextViewBg);
+            mTexts[i].setTextSize(TypedValue.COMPLEX_UNIT_SP,billTextViewSize);
+            mTexts[i].setOnClickListener(this);
 
 
 
-            if(mTextLineHeight < mTexts[i].getLineHeight())
-            {
-                mTextLineHeight = mTexts[i].getLineHeight();
-            }
             addViewInLayout(mTexts[i],-1,params,true);
         }
 
@@ -67,10 +93,12 @@ public class BillTextView extends SmoothViewGroup {
         if(isOddCircle())
         {
             mTexts[0].setText(getBillText(mRepeatTimes + 1));
+            mTexts[0].setTag(mRepeatTimes + 1);
         }
         else
         {
             mTexts[1].setText(getBillText(mRepeatTimes+1));
+            mTexts[1].setTag(mRepeatTimes + 1);
         }
 
         for (int i = 0; i < mTexts.length; i++) {
@@ -145,4 +173,52 @@ public class BillTextView extends SmoothViewGroup {
         position = position % mTextList.size();
         return mTextList.get(position);
     }
+
+    public void setOnBillViewCllickListener(BillViewClickListener mClickListener)
+    {
+        this.mClickListener = mClickListener;
+    }
+
+    @Override
+    public void onClick(View view) {
+        int tag = (int) view.getTag();
+
+        Log.e("BillTextView",tag+"");
+
+        tag = tag % mTextList.size();
+        if(mClickListener != null)
+            mClickListener.onClick(tag);
+
+    }
+
+    public void start()
+    {
+
+        if(status == STATUS_SMOOTHING)
+            return;
+
+        ValueAnimator animator = ValueAnimator.ofInt(5000,0);
+        animator.setDuration(5*1000);
+        animator.setRepeatCount(ValueAnimator.INFINITE);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                int value = (int) valueAnimator.getAnimatedValue();
+
+
+
+
+                if(value/10 == 0)
+                {
+                    startSmooth();
+                }
+            }
+        });
+
+        animator.start();
+
+        status = STATUS_SMOOTHING;
+
+    }
+
 }
