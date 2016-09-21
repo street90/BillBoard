@@ -5,11 +5,26 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
+
+import com.song.billboardlibrary.BillTextView;
+import com.song.billboardlibrary.BillViewClickListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+
+    Button btChange;
+    BillTextView btv;
+    List<String> mStrings;
+    Button btAuto;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +41,46 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        mStrings = new ArrayList<String>();
+
+        mStrings.add("Haha");
+        mStrings.add("dfasdfas");
+        mStrings.add("sdfasdfasf");
+
+        btv = (BillTextView) findViewById(R.id.btv);
+
+        btv.setBillText(mStrings);
+
+
+        btAuto = (Button) findViewById(R.id.bt_auto);
+
+        btAuto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btv.startSmooth();
+            }
+        });
+
+
+        btChange = (Button) findViewById(R.id.bt_change);
+
+        btChange.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                btv.start();
+            }
+        });
+
+        btv.setOnBillViewCllickListener(new BillViewClickListener() {
+            @Override
+            public void onClick(int position) {
+                Toast.makeText(MainActivity.this,mStrings.get(position),Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+
     }
 
     @Override

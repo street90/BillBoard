@@ -13,8 +13,28 @@
     tools:context="com.song.billboard.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <TextView
+
+
+    <Button
+        android:id="@+id/bt_auto"
+        android:text="自动切换"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+
+    <Button
+        android:id="@+id/bt_change"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"/>
+        android:text="单次切换"
+        />
+
+    <com.song.billboardlibrary.BillTextView
+        android:layout_centerInParent="true"
+        android:id="@+id/btv"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"/>
+
 </RelativeLayout>
