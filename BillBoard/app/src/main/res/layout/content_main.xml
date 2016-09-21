@@ -34,6 +34,10 @@
     <com.song.billboardlibrary.BillTextView
         android:layout_centerInParent="true"
         android:id="@+id/btv"
+        app:billTextBackground="@android:color/holo_blue_light"
+        app:billTextColor="@android:color/holo_orange_light"
+        app:billTextSize="17"
+        app:billTextGravity="right"
         android:layout_width="match_parent"
         android:layout_height="50dp"/>
 
