@@ -22,7 +22,8 @@
 
 ###JAVA
 	1. startSmooth();  自动滚动
-	2. start();  单次滚动
+	2. start();  单次滚动  
+	3. setBillText(mStrings)  设置显示的内容List<String>
 
 
 如果您有什么建议或者意见请联系我
